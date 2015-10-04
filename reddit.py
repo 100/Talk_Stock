@@ -1,5 +1,7 @@
 import praw
 import private
+import pymongo
+from scipy import stats
 
 SCOPES = set(['edit', 'flair', 'history', 'identity', 'modconfig', 'modcontributors', 'modflair', 'modothers', 'modposts', 'modself',	'privatemessages', 'read', 'report', 'submit', 'vote'])
 
@@ -24,3 +26,45 @@ def postSubmissions(articles):
         thread = r.submit("talkstock", title, url = value['url'])
         if value['abstract'] != 'none':
             thread.add_comment("[This post was made by a bot to summarize the article.] \n" + "Abstract: " + value['abstract'])
+
+def createUserJSON(comment):
+	user = {'user': comment.author.name,'karma': 0}
+	return user
+
+def updateUsers():
+	client = pymongo.MongoClient()
+	db = client.users
+	r = createPRAW()
+	submissions = r.get_subreddit("talkstock").get_new()
+	for sub in submissions:
+		comments = sub.replace_more_comments.comments
+		for comment in comments:
+			if db.find_one({'user': comment.author.user}) is None:
+				db.insert_one(createUserJSON(comment))
+			db.update_one({'user': comment.author.name}, {'$set': {'karma': 0}})
+		for comment in comments:
+			currKarama = db.find_one({'user': comment.author.user})['karma']
+			db.update_one({'user': comment.author.name}, {'$set': {'karma': currKarma + comment.score}})
+		client.close()
+
+def startGold():
+	client = pymongo.MongoClient()
+	db = client.users
+	users = []
+	karma = []
+	gold = []
+	for user in db.find():
+		users.append(user['user'])
+		karma.append(user['karma'])
+	for index, karma in enumerate(karma):
+		if stats.percentileofscore(karma, karma[index]) > 90.0:
+			gold.append(users[index])
+	client.close()
+	return users, karma, gold
+
+def checkGold(users, karma, gold):
+	for index, karma in enumerate(karma):
+		if stats.percentileofscore(karma, karma[index]) < 90.0:
+			gold.remove(users[index])
+		if stats.percentileofscore(karma, karma[index]) > 90.0:
+			gold.append(users[index])
