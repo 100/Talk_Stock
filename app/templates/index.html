@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Your page title here :)</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/skeleton.css">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="images/favicon.png">
+
+</head>
+<body>
+ <div class="container">
+        <ul class="navbar-list" style="margin-left:80px">
+          <li class="navbar-item"><a class="navbar-link" href="#intro" style="font-size:12px;">HOME</a></li>
+          <li class="navbar-item">
+            <a class="navbar-link" href="#" style="font-size:12px;">ABOUT</a>
+          </li>
+          <li class="navbar-item"><a class="navbar-link" href="#examples" style="font-size:12px;">TEXT</a></li>
+          <li class="navbar-item">
+            <a class="navbar-link" href="#" style="font-size:12px;">VIEW</a>
+          </li>
+        </ul>
+      </div>
+
+
+
+
+<br><br>
+<span></span>
+<div class="container">
+<!-- Logo Image -->
+<center><img src="unicorn.jpg" alt="Talk Stock" style="width:420px;height:420px"></center>
+
+ <!--  Blurb -->
+ <div class="container">
+ <section class="header"><center><h2 class="title">An environment for stock predictions.</h2></center></div>
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<hr>
+<br><br><br><br>
+
+<!-- Descriptions -->
+<div class="container">
+  <div class="row">
+      <center><div class="one-third column" style="margin-left:10px;margin-right:10px;"><img src="reddit.jpg" alt="Reddit" style="width:260px;height:170px;"><br><h4>Powered by Reddit</h4>
+        <p>Reddit will be as a platform where recent events and news articles will be posted on the subreddit /r/talkstock.  Reddit will be used as a tool for maintaining the categorization of quality news events that will have a relevance to affecting certain stocks.
+      </div></center>
+
+      <center><div class="one-third column" style="margin-left:10px;margin-right:10px;"><img src="nytimes.jpg" alt="NY Times" style="width:235px;height:180px;"><h4>NY Times API</h4>
+        <p>We are using the NY Times API so that we will be able to retrieve a reliable source of news related to top businesses or other news events that may play a role in affecting the stock market.  Articles will span the lenght of about seven days to generally map the current trend of various stocks. </p>
+
+      </div></center>
+
+     <div class="one-third column" style="margin-left:20px;"><center><br><br><img src="bloomberg.jpg" alt="Bloomberg" style="width:300px;height:90px;margin-left:-20px;"><br><h4>Hackathon Data Service</h4>
+        <p><b>(Feature is not implemented)</b> We will be using Bloomberg's data service to provide information that will prove to be useful in predictions as well as demonstrating its role in the results of stocks.</p></center>
+      </div>
+
+  </div>
+</div>
+
+<hr>
+
+<div style="padding-bottom:100px;">  </div>
+<!--- Forms -->
+
+<center>
+  <h3>Receive Updates on Stocks</h3>
+  <div style="align:center;">
+      <label for="examplePhoneInput" style="align:center;">
+      Your Phone Number</label>
+      <input type="tel" placeholder="+12015555555" id="examplePhoneInput" style="center;">
+    </div><br>
+    <div>
+ <input class="button-primary" type="submit" value="Submit" style="align:center;"></div>
+</center>
+
+<br><br><br><br>
+
+<hr>
+<br><br>
+<center>
+<h3 style="font-size:50px;">Stock Feed</h3></center>
+
+{% for link, title in news %}
+  <center>
+  <div class="newsworthy" style="margin-top:30px;margin-bottom:30px;font-size:20px">
+    <a href= {{ link }} style="text-decoration:none;">{{ title }}</a>
+  </div>
+</center>
+{% endfor %}
+
+</div>
+</center>
+
+
+</div>
+<!--Extra info
+<p>Our site is built upon a subreddit that we created for the sole purpose
+          of news on business that may affect the company's stocks depending on the intensity of the event that occurred.  Each post on the subreddit
+          will be downvoted or upvoted on its relevance/intensity.  People will
+          be able to comment their predictions of the stock on each of the posts and users will also vote upon the strength of these predictions.  If the users manage to obtain a significant large amount of karma, the top 10% of users will be granted access to gold tier, to an elite subreddit.There users will be able to see only the best of stock predictors.  If it may be the case that users in this elite subreddit cannot maintain quality predictions, they will eventually lose access to the elite subreddit and be replaced by better predictors.</p>
+        -->
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>

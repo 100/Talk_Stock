@@ -1,6 +1,7 @@
 import praw
 import private
 import pymongo
+import requests
 from scipy import stats
 
 SCOPES = set(['edit', 'flair', 'history', 'identity', 'modconfig', 'modcontributors', 'modflair', 'modothers', 'modposts', 'modself',	'privatemessages', 'read', 'report', 'submit', 'vote'])
@@ -34,37 +35,49 @@ def createUserJSON(comment):
 def updateUsers():
 	client = pymongo.MongoClient()
 	db = client.users
+	users = db.users
 	r = createPRAW()
 	submissions = r.get_subreddit("talkstock").get_new()
 	for sub in submissions:
-		comments = sub.replace_more_comments.comments
+		sub.replace_more_comments
+		comments = sub.comments
 		for comment in comments:
-			if db.find_one({'user': comment.author.user}) is None:
-				db.insert_one(createUserJSON(comment))
-			db.update_one({'user': comment.author.name}, {'$set': {'karma': 0}})
+			users.insert_one(createUserJSON(comment))
+			users.update_one({'user': comment.author.name}, {'$set': {'karma': 0}})
 		for comment in comments:
-			currKarama = db.find_one({'user': comment.author.user})['karma']
-			db.update_one({'user': comment.author.name}, {'$set': {'karma': currKarma + comment.score}})
+			currKarma = users.find_one({'user': comment.author.name})['karma']
+			users.update_one({'user': comment.author.name}, {'$set': {'karma': currKarma + comment.score}})
 		client.close()
 
 def startGold():
 	client = pymongo.MongoClient()
 	db = client.users
-	users = []
+	users = db.users
+	usersR = []
 	karma = []
 	gold = []
-	for user in db.find():
-		users.append(user['user'])
+	for user in users.find():
+		usersR.append(user['user'])
 		karma.append(user['karma'])
-	for index, karma in enumerate(karma):
-		if stats.percentileofscore(karma, karma[index]) > 90.0:
+	for index, karmaNum in enumerate(karma):
+		if stats.percentileofscore(karma, karmaNum) > 90.0:
 			gold.append(users[index])
 	client.close()
-	return users, karma, gold
+	return usersR, karma, gold
 
 def checkGold(users, karma, gold):
-	for index, karma in enumerate(karma):
-		if stats.percentileofscore(karma, karma[index]) < 90.0:
-			gold.remove(users[index])
-		if stats.percentileofscore(karma, karma[index]) > 90.0:
+	for index, karmaNum in enumerate(karma):
+		if stats.percentileofscore(karma, karmaNum) < 90.0:
+			try:
+				gold.remove(users[index])
+			except Exception:
+				pass
+		if stats.percentileofscore(karma, karmaNum) > 90.0:
 			gold.append(users[index])
+
+def getTwenty():
+	r = createPRAW()
+	subs = []
+	for sub in r.get_subreddit("talkstock").get_hot(limit=20):
+		subs.append((sub.permalink, sub.title))
+	return subs
